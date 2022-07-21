@@ -15,9 +15,11 @@ const usuarioPut = (req, res = response) => {
 };
 
 const usuarioPost = (req, res = response) => {
+    const body = req.body;
+
     res.json({
-        ok: true,
-        msg: 'post de la api desde el controlador'
+        msg: 'post de la api desde el controlador',
+        body
     });
 };
 const usuarioPatch = (req, res = response) => {
@@ -29,9 +31,10 @@ const usuarioPatch = (req, res = response) => {
 
 
 const usuarioDelete = (req, res = response) => {
+    const body = req.body;
     res.json({
-        ok: true,
-        msg: 'delete de la api desde el controllador'
+        msg: 'delete de la api desde el controllador',
+        body
     });
 };
 

@@ -1,6 +1,7 @@
 
 const express = require('express')
 var cors = require('cors')
+const bodyParser = require("body-parser");
 
 class Server {
     constructor() {
@@ -16,7 +17,9 @@ this.usuariosPath = '/api/usuarios';
 
     middlewares() {
         //CORSS
-        this.app.use(cors())
+        this.app.use(cors());
+        //parseo y lectura del body
+        // this.app.use(express.json());
         //directorio Publico
         this.app.use(express.static('public'))
     }
