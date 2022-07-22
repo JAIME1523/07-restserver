@@ -1,25 +1,35 @@
 
-const { response } = require('express')
+const { response, request } = require('express')
 
-const usuariosGet = (req, res = response) => {
+const usuariosGet = (req = request , res = response) => {
+    const {nombre, edad = 'sin edad'}  = req.query;
     res.json({
-        msg: 'get de la api controlador'
+        msg: 'get de la api controlador',
+        nombre,
+        edad
     });
 };
 
 
 const usuarioPut = (req, res = response) => {
+    const id =  req.params.id;
+    const id2 =  req.headers.id;
+
+console.log(req);
     res.json({
-        msg: 'put de la api desde controlador'
+        msg: 'put de la api desde controlador',
+        id,
+        id2
     });
 };
 
 const usuarioPost = (req, res = response) => {
-    const body = req.body;
+    const {nombre, edad} = req.body;
 
     res.json({
         msg: 'post de la api desde el controlador',
-        body
+        nombre,
+        edad
     });
 };
 const usuarioPatch = (req, res = response) => {

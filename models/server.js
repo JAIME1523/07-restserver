@@ -19,7 +19,7 @@ this.usuariosPath = '/api/usuarios';
         //CORSS
         this.app.use(cors());
         //parseo y lectura del body
-        // this.app.use(express.json());
+        this.app.use(express.json());
         //directorio Publico
         this.app.use(express.static('public'))
     }

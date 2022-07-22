@@ -7,17 +7,19 @@ const {
     usuarioPatch,
     usuarioDelete } = require('../controllers/usuarios');
 
-    const bodyPserse = require("body-parser");
+    // const bodyPserse = require("body-parser");
 
 
 const router = Router();
-const jsonParser = bodyPserse.json();
+// const jsonParser = bodyPserse.json();
 
 router.get('/', usuariosGet);
-router.put('/', usuarioPut);
-router.post('/',jsonParser,  usuarioPost);
+router.put('/:id', usuarioPut);
+router.post('/',  usuarioPost);
+// router.post('/',jsonParser,  usuarioPost);
+
 
 router.patch('/', usuarioPatch);
-router.delete('/',jsonParser, usuarioDelete);
+router.delete('/', usuarioDelete);
 
 module.exports = router;
