@@ -2,17 +2,22 @@
 const express = require('express')
 var cors = require('cors')
 const bodyParser = require("body-parser");
+const { dbContection } = require('../database/config');
 
 class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT;
-this.usuariosPath = '/api/usuarios';
-
+        this.usuariosPath = '/api/usuarios';
+        //conexion a la base de datos para
+        this.conectarDB();
         //Middlewares
         this.middlewares();
         //Rutas de mi aplicacion
         this.routes();
+    }
+    async conectarDB() {
+     await   dbContection();
     }
 
     middlewares() {
@@ -25,8 +30,9 @@ this.usuariosPath = '/api/usuarios';
     }
 
     routes() {
-      this.app.use( this.usuariosPath , require('../routes/usuarios'))
+        this.app.use(this.usuariosPath, require('../routes/usuarios'))
     }
+    
 
     listen() {
         this.app.listen(this.port, () => {

@@ -1,8 +1,11 @@
 
 const { response, request } = require('express')
+const Usuario = require('../models/usuario');
+const bcryptjs = require('bcryptjs');
+// const { validationResult } = require('express-validator');
 
-const usuariosGet = (req = request , res = response) => {
-    const {nombre, edad = 'sin edad'}  = req.query;
+const usuariosGet = (req = request, res = response) => {
+    const { nombre, edad = 20 } = req.query;
     res.json({
         msg: 'get de la api controlador',
         nombre,
@@ -12,10 +15,10 @@ const usuariosGet = (req = request , res = response) => {
 
 
 const usuarioPut = (req, res = response) => {
-    const id =  req.params.id;
-    const id2 =  req.headers.id;
+    const id = req.params.id;
+    const id2 = req.headers.id;
 
-console.log(req);
+    console.log(req);
     res.json({
         msg: 'put de la api desde controlador',
         id,
@@ -23,13 +26,39 @@ console.log(req);
     });
 };
 
-const usuarioPost = (req, res = response) => {
-    const {nombre, edad} = req.body;
+const usuarioPost = async (req, res = response) => {
+
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //     return res.status(400).json(errors);
+    // }
+
+    const { nombre, correo, password, rol } = req.body;
+    const body = req.body;
+    // const usuario = new Usuario(body);
+    const usuario = new Usuario({ nombre, correo, password, rol });
+
+    //verificar si el correo existe
+    // const existeEmail = await Usuario.findOne({ correo });
+    // if (existeEmail) {
+    //     return res.status(400).json({
+    //         msg: 'El correo ya esta regsitrado',
+
+    //     });
+
+    // }
+    //encriptar la contraseña
+    const salt = bcryptjs.genSaltSync();
+    usuario.password = bcryptjs.hashSync(password, salt);
+
+    //guardar en base de datos 
+    await usuario.save();
 
     res.json({
-        msg: 'post de la api desde el controlador',
-        nombre,
-        edad
+        // msg: 'post de la api desde el controlador',
+        usuario
+        // nombre,
+        // edad
     });
 };
 const usuarioPatch = (req, res = response) => {
