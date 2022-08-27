@@ -4,25 +4,49 @@ const Usuario = require('../models/usuario');
 const bcryptjs = require('bcryptjs');
 // const { validationResult } = require('express-validator');
 
-const usuariosGet = (req = request, res = response) => {
-    const { nombre, edad = 20 } = req.query;
+const usuariosGet = async (req = request, res = response) => {
+    // const { nombre, edad = 20 } = req.query;
+    const { limit = 5, desde = 0 } = req.query;
+    const query = {
+        estado: true
+    }
+    //poner validacion que siempre recibe un numero
+    // const usuarios = await Usuario.find(query).limit(Number(limit)).skip(Number(desde));
+    // const total =  await Usuario.countDocuments(query)
+
+
+    //coleccion de 2 promesas 
+    const [total, usuarios] = await Promise.all([
+        Usuario.countDocuments(query),
+        Usuario.find(query).limit(Number(limit)).skip(Number(desde))
+    ]);
     res.json({
-        msg: 'get de la api controlador',
-        nombre,
-        edad
+        total,
+        usuarios
     });
 };
 
 
-const usuarioPut = (req, res = response) => {
-    const id = req.params.id;
-    const id2 = req.headers.id;
+const usuarioPut = async (req, res = response) => {
+    // const id = req.params.id;
+    // const id2 = req.headers.id;
+    const { id } = req.params;
+    //TODO: validar con la base de datos
+    const { _id, password, google, correo, ...resto } = req.body;
 
-    console.log(req);
+    if (password) {
+        const salt = bcryptjs.genSaltSync();
+        resto.password = bcryptjs.hashSync(password, salt);
+
+    }
+    const usuario = await Usuario.findByIdAndUpdate(id, resto);
+
+    // console.log(req);
     res.json({
         msg: 'put de la api desde controlador',
-        id,
-        id2
+
+        usuario
+        // id2
     });
 };
 
@@ -69,11 +93,19 @@ const usuarioPatch = (req, res = response) => {
 };
 
 
-const usuarioDelete = (req, res = response) => {
+const usuarioDelete = async (req, res = response) => {
     const body = req.body;
+    const { id } = req.params;
+    //Fisiscamente los borramos
+    // const usuario = await Usuario.findByIdAndDelete(id);
+
+    //borrrar sin eliminar 
+    const usuario = await Usuario.findByIdAndUpdate(id, { estado: false })
+
+
     res.json({
-        msg: 'delete de la api desde el controllador',
-        body
+        // msg: 'delete de la api desde el controllador',
+        usuario
     });
 };
 

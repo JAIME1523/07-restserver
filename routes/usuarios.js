@@ -7,7 +7,7 @@ const {
     usuarioPost,
     usuarioPatch,
     usuarioDelete } = require('../controllers/usuarios');
-const { esRolevalido, emailExiste } = require('../helpers/db-validator');
+const { esRolevalido, emailExiste, existeUsuarioPorId } = require('../helpers/db-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
 
 // const bodyPserse = require("body-parser");
@@ -17,7 +17,16 @@ const router = Router();
 // const jsonParser = bodyPserse.json();
 
 router.get('/', usuariosGet);
-router.put('/:id', usuarioPut);
+router.put('/:id', [
+    check('id', 'no es un ID válido').isMongoId(),
+    check('id').custom(existeUsuarioPorId),
+    //podemos editar para modificar que puede venir o no el rol
+    check('rol').custom(
+        esRolevalido
+    ),
+
+    validarCampos
+], usuarioPut);
 router.post('/', [
     check('nombre', 'el nombre es obligatorio').not().isEmpty(),
     check('password', 'EL password debe ser mas de 6 letras ').isLength(6),
@@ -36,6 +45,11 @@ router.post('/', [
 
 
 router.patch('/', usuarioPatch);
-router.delete('/', usuarioDelete);
+router.delete('/:id',[
+    check('id', 'no es un ID válido').isMongoId(),
+    check('id').custom(existeUsuarioPorId),
+    validarCampos
+
+], usuarioDelete);
 
 module.exports = router;
