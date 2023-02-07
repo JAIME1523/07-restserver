@@ -5,10 +5,13 @@ const bodyParser = require("body-parser");
 const { dbContection } = require('../database/config');
 
 class Server {
+
     constructor() {
         this.app = express();
         this.port = process.env.PORT;
         this.usuariosPath = '/api/usuarios';
+        this.authPath = '/api/auth';
+
         //conexion a la base de datos para
         this.conectarDB();
         //Middlewares
@@ -17,7 +20,7 @@ class Server {
         this.routes();
     }
     async conectarDB() {
-     await   dbContection();
+        await dbContection();
     }
 
     middlewares() {
@@ -30,9 +33,13 @@ class Server {
     }
 
     routes() {
+        this.app.use(this.authPath, require('../routes/auth'))
+
         this.app.use(this.usuariosPath, require('../routes/usuarios'))
+
+
     }
-    
+
 
     listen() {
         this.app.listen(this.port, () => {

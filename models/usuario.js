@@ -35,7 +35,8 @@ const UsuarioSchema = Schema({
 });
 UsuarioSchema.methods.toJSON = function () {
     // para qutar esos argumentos de la base y resgresa los demas datos con el nombre de usuario 
-    const { __v, password, ...usuario } = this.toObject();
+    const { __v, password, _id, ...usuario} = this.toObject();
+    usuario.uid = _id;
     return usuario;
 }
 module.exports = model('Usuario', UsuarioSchema);

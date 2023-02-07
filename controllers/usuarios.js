@@ -96,16 +96,20 @@ const usuarioPatch = (req, res = response) => {
 const usuarioDelete = async (req, res = response) => {
     const body = req.body;
     const { id } = req.params;
+    // const uid = req.uid
     //Fisiscamente los borramos
     // const usuario = await Usuario.findByIdAndDelete(id);
 
     //borrrar sin eliminar 
     const usuario = await Usuario.findByIdAndUpdate(id, { estado: false })
 
+    const usuarioAutenticado = req.usuario;
+
 
     res.json({
         // msg: 'delete de la api desde el controllador',
-        usuario
+        usuario,
+       usuarioAutenticado
     });
 };
 
