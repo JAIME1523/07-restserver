@@ -21,7 +21,6 @@ const validarJWY = async (req, res = response, next) => {
                 msg: 'Token no valido -uasrio no existe en db'
             });
         }
-
         //verificar si el uid tiene el estado en true
         if (!usuario.estado) {
             return res.status(401).json({
