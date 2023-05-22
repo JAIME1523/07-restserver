@@ -4,9 +4,12 @@ var cors = require('cors')
 const bodyParser = require("body-parser");
 const { dbContection } = require('../database/config');
 const fileUpload = require('express-fileupload');
+const { socketController } = require('../socket/controller');
 class Server {
     constructor() {
         this.app = express();
+        this.server = require('http').createServer(this.app);
+        this.io = require('socket.io')(this.server);
         this.port = process.env.PORT;
         this.paths = {
             auth: '/api/auth',
@@ -32,6 +35,7 @@ class Server {
         this.middlewares();
         //Rutas de mi aplicacion
         this.routes();
+        this.sockets();
 
 
 
@@ -61,14 +65,12 @@ class Server {
         this.app.use(this.paths.categorias, require('../routes/categorias'))
         this.app.use(this.paths.productos, require('../routes/productos'))
         this.app.use(this.paths.uploads, require('../routes/uploads'))
-
-
-
-
-
+    }
+    sockets() {
+        this.io.on('connection', (socket) => socketController(socket, this.io));
     }
     listen() {
-        this.app.listen(this.port, () => {
+        this.server.listen(this.port, () => {
             console.log('Servidor corriendo en el puerto:', this.port)
         })
     }

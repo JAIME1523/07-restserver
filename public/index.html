@@ -5,12 +5,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Document</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    
 </head>
 
 <body>
     <h1>Acceso Denegado</h1>
-    <div id="g_id_onload" data-client_id="437990545837-mmm3o1dcm4j84luoefva5mrl1mc1ib2v.apps.googleusercontent.com"
+    <div class="col-sm-6"  id="g_id_onload" data-client_id="437990545837-mmm3o1dcm4j84luoefva5mrl1mc1ib2v.apps.googleusercontent.com"
         data-callback="handleCredentialResponse" data-auto_prompt="false">
     </div>
     <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with"
@@ -20,45 +22,22 @@
     <button id="google_signout">
         Signout
     </button>
+    <div class="col-sm-6">
+    <h1>Custom login</h1>
+<hr>
+<form class="d-grid" action="">
+
+    <input type="text" name="correo" class="form-control mb-2" placeholder="Correo" id="">
+    <input type="text" name="password" class="form-control mb-2" placeholder="Password" id="">
+    <button type="submit" class="btn btn-primary">
+        ingresar
+    </button>
+</form>
+       
+    </div>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <script>
-        function handleCredentialResponse(response) {
-            // decodeJwtResponse() is a custom function defined by you
-            // to decode the credential response.
-            //    const responsePayload = decodeJwtResponse(response.credential);
-
-            //    console.log("ID: " + responsePayload.sub);
-            //    console.log('Full Name: ' + responsePayload.name);
-            //    console.log('Given Name: ' + responsePayload.given_name);
-            //    console.log('Family Name: ' + responsePayload.family_name);
-            //    console.log("Image URL: " + responsePayload.picture);
-            //    console.log("Email: " + responsePayload.email);
-            const body = { id_token: response.credential }
-            fetch('http://localhost:8080/api/auth/google', {
-                method: 'POST',
-                headers: {
-                    'Content-TYpe': 'application/json'
-                },
-                body: JSON.stringify(body)
-            }).then(
-                resp => resp.json()
-            ).then(resp => {
-                console.log(resp)
-                localStorage.setItem('email', resp.usuario.correo)
-            }).catch(console.warn)
-        }
-
-        const button = document.getElementById('google_signout');
-        button.onclick = () => {
-            console.log(google.accounts.id)
-            google.accounts.id.revoke(localStorage.getItem('email'), done => {
-                localStorage.clear();
-                location.reload();
-            });
-        }
-    </script>
-
-
+  
+<script src="./js/auth.js"></script>
 </body>
 
 </html>
